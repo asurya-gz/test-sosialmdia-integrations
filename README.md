@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Social Performance Monitor
 
-## Getting Started
+Web application berbasis Next.js untuk memantau performa 3 platform sosial media dalam satu dashboard:
 
-First, run the development server:
+- YouTube
+- TikTok
+- Instagram
+
+Aplikasi ini menampilkan nama akun, foto profil, total views, serta daftar konten terbaru dari masing-masing platform dalam tampilan yang ringkas dan mudah dibandingkan.
+
+## Tech Stack
+
+- Next.js
+- TypeScript
+- App Router
+- Tailwind CSS
+- RapidAPI
+- YouTube Data API v3
+
+## Menjalankan Project
+
+Install dependency:
+
+```bash
+npm install
+```
+
+Buat file `.env.local` lalu isi environment variable berikut:
+
+```env
+YOUTUBE_API_KEY=your_youtube_api_key
+RAPIDAPI_KEY=your_rapidapi_key
+```
+
+Jalankan project:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Penjelasan Singkat
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Pendekatan yang Digunakan
 
-## Learn More
+Project ini dibangun menggunakan Next.js dengan pendekatan server-side data fetching melalui API route internal. Setiap platform memiliki layer integrasi sendiri agar proses pengambilan data tetap terpisah, lebih rapi, dan mudah diganti apabila di kemudian hari perlu berpindah ke provider atau API resmi yang berbeda.
 
-To learn more about Next.js, take a look at the following resources:
+Data dari YouTube, TikTok, dan Instagram dinormalisasi ke dalam satu bentuk data yang konsisten sebelum dikirim ke frontend. Dengan pendekatan ini, komponen UI tidak perlu mengetahui perbedaan struktur response dari masing-masing platform, sehingga dashboard bisa menampilkan data secara seragam dan lebih mudah dikembangkan.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Untuk kebutuhan refresh data tanpa reload halaman, aplikasi menggunakan pemanggilan endpoint per platform secara dinamis dari sisi client. Dengan begitu, setiap platform dapat diperbarui secara independen tanpa memengaruhi data platform lain.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Kendala yang Ditemui dan Solusi yang Diterapkan
 
-## Deploy on Vercel
+1. Integrasi Instagram
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Kendala terbesar ada pada proses mencari provider API Instagram yang sesuai. Beberapa API memang dapat mengembalikan data yang cukup lengkap, tetapi aksesnya dibatasi quota atau mengharuskan penggunaan plan berbayar. Di sisi lain, beberapa opsi gratis bisa digunakan untuk mengambil profil dan postingan, tetapi field yang dibutuhkan tidak selalu lengkap, terutama untuk data views per konten maupun total views.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Solusi yang diterapkan adalah menggunakan pendekatan yang fleksibel terhadap provider Instagram. Struktur integrasi dibuat terpisah agar mudah menyesuaikan endpoint dan mapping data sesuai provider yang tersedia, sehingga aplikasi tetap bisa berjalan meskipun ada keterbatasan pada sumber data.
+
+2. Perhitungan Total Views TikTok
+
+Pada TikTok, provider yang digunakan tidak menyediakan nilai total keseluruhan views akun secara langsung dalam satu field. Karena itu, total views tidak bisa diambil secara instan dari data profil.
+
+Solusi yang diterapkan adalah mengambil seluruh konten yang berhasil diakses melalui pagination, lalu menjumlahkan views dari masing-masing konten secara manual. Pendekatan ini digunakan agar total views yang ditampilkan tetap merepresentasikan akumulasi views akun berdasarkan data yang berhasil diperoleh dari provider.
+
+3. Waktu Loading TikTok dan Instagram
+
+Waktu loading TikTok cenderung lebih lama dibanding YouTube karena proses perhitungan total views dilakukan secara manual. Untuk mendapatkan total views akun, sistem perlu mengambil data konten secara bertahap melalui beberapa request pagination, kemudian menjumlahkan seluruh views dari konten yang berhasil diperoleh.
+
+Pada Instagram, waktu loading juga lebih tinggi karena proses integrasinya lebih kompleks. Sistem perlu mencoba provider utama terlebih dahulu, lalu menggunakan fallback ke provider lain apabila data konten dari provider utama tidak lengkap atau tidak dapat dipakai. Selain itu, data postingan juga diambil secara bertahap melalui beberapa request, sehingga total waktu respons menjadi lebih panjang dibanding platform lain.
+
+## Catatan
+
+- Akurasi data sangat bergantung pada availability dan kelengkapan field dari provider API masing-masing platform.
+- Untuk Instagram dan TikTok, beberapa field dapat berbeda tergantung akun, jenis konten, dan batasan provider yang digunakan.
+- Seluruh secret disimpan melalui environment variable dan tidak diletakkan di source code frontend.
