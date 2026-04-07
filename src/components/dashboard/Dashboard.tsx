@@ -24,78 +24,77 @@ export function Dashboard() {
   };
 
   return (
-    <main className="min-h-screen px-4 py-6 md:px-8 md:py-10">
-      <div className="mx-auto flex max-w-7xl flex-col gap-6">
-        <section className="section-shell overflow-hidden rounded-[28px] px-6 py-8 md:px-8 md:py-10">
-          <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
-            <div className="space-y-5">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-brand)]">
-                Social Performance Monitor
-              </div>
-              <div className="space-y-3">
-                <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-[var(--color-ink-950)] md:text-5xl">
-                  Pantau performa akun media sosial dalam satu dashboard yang ringkas dan elegan.
-                </h1>
-                <p className="max-w-2xl text-sm leading-6 text-[var(--color-ink-700)] md:text-base">
-                  Lihat total views, konten terbaru, profil akun, dan pembaruan data dari YouTube,
-                  TikTok, dan Instagram tanpa perlu berpindah halaman.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-              <div className="glass-card rounded-2xl p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-ink-500)]">
-                  Platform aktif
-                </p>
-                <p className="mt-3 text-3xl font-semibold text-[var(--color-ink-950)]">{loadedProfiles.length}/3</p>
-              </div>
-              <div className="glass-card rounded-2xl p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-ink-500)]">
-                  Total views
-                </p>
-                <p className="mt-3 text-3xl font-semibold text-[var(--color-ink-950)]">
-                  {loadedProfiles.length ? formatViewCount(totalViews) : "-"}
-                </p>
-              </div>
-              <div className="glass-card rounded-2xl p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-ink-500)]">
-                  Konten tampil
-                </p>
-                <p className="mt-3 text-3xl font-semibold text-[var(--color-ink-950)]">
-                  {loadedProfiles.length ? totalContents : 0}
-                </p>
-              </div>
-            </div>
+    <div className="flex h-screen overflow-hidden bg-[#060b18]">
+      {/* Sidebar */}
+      <aside className="sidebar-panel flex w-[290px] shrink-0 flex-col p-5">
+        {/* Brand */}
+        <div className="mb-5 flex items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/30">
+            <svg className="h-4.5 w-4.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
           </div>
-        </section>
-
-        <section className="grid gap-6 xl:grid-cols-[0.95fr_2.05fr]">
-          <div className="space-y-6">
-            <SearchForm onSearch={handleSearch} isLoading={isAnyLoading} />
+          <div>
+            <p className="text-sm font-bold tracking-tight text-white">SocialScope</p>
+            <p className="text-[10px] uppercase tracking-widest text-white/30">Performance Monitor</p>
           </div>
+        </div>
 
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-xl font-semibold text-[var(--color-ink-950)]">Account Overview</h2>
-              <p className="text-sm text-[var(--color-ink-500)]">
-                Ringkasan tiap platform disusun agar mudah dipantau dan dibandingkan.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 gap-5 2xl:grid-cols-3">
-              {PLATFORMS.map((platform) => (
-                <PlatformCard
-                  key={platform}
-                  platform={platform}
-                  state={state[platform]}
-                  onRefresh={() => fetchPlatform(platform, inputsRef.current[platform])}
-                />
-              ))}
-            </div>
+        {/* Stats */}
+        <div className="mb-5 grid grid-cols-3 gap-2">
+          <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/10 p-2.5">
+            <p className="text-[9px] font-bold uppercase tracking-widest text-indigo-400/70">Aktif</p>
+            <p className="mt-0.5 text-base font-bold text-indigo-300">{loadedProfiles.length}/3</p>
           </div>
-        </section>
-      </div>
-    </main>
+          <div className="rounded-xl border border-sky-500/20 bg-sky-500/10 p-2.5">
+            <p className="text-[9px] font-bold uppercase tracking-widest text-sky-400/70">Views</p>
+            <p className="mt-0.5 text-base font-bold text-sky-300">
+              {loadedProfiles.length ? formatViewCount(totalViews) : "—"}
+            </p>
+          </div>
+          <div className="rounded-xl border border-violet-500/20 bg-violet-500/10 p-2.5">
+            <p className="text-[9px] font-bold uppercase tracking-widest text-violet-400/70">Konten</p>
+            <p className="mt-0.5 text-base font-bold text-violet-300">
+              {loadedProfiles.length ? totalContents : 0}
+            </p>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="mb-4 h-px bg-white/[0.06]" />
+
+        {/* Search form */}
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <SearchForm onSearch={handleSearch} isLoading={isAnyLoading} />
+        </div>
+      </aside>
+
+      {/* Main content */}
+      <main className="flex min-w-0 flex-1 flex-col p-5">
+        {/* Header bar */}
+        <div className="mb-4 flex shrink-0 items-center justify-between">
+          <div>
+            <h1 className="text-base font-bold text-white">Account Overview</h1>
+            <p className="text-xs text-white/35">Data profil & konten terbaru dari setiap platform</p>
+          </div>
+          <div className="flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.04] px-3 py-1.5">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-white/35">Live</span>
+          </div>
+        </div>
+
+        {/* Platform cards */}
+        <div className="grid min-h-0 flex-1 grid-cols-3 gap-4">
+          {PLATFORMS.map((platform) => (
+            <PlatformCard
+              key={platform}
+              platform={platform}
+              state={state[platform]}
+              onRefresh={() => fetchPlatform(platform, inputsRef.current[platform])}
+            />
+          ))}
+        </div>
+      </main>
+    </div>
   );
 }

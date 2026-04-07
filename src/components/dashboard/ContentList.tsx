@@ -11,17 +11,14 @@ interface ContentListProps {
 export function ContentList({ contents }: ContentListProps) {
   if (!contents.length) {
     return (
-      <div className="rounded-2xl border border-dashed border-slate-200 bg-white/60 px-4 py-6 text-center">
-        <p className="text-sm font-medium text-[var(--color-ink-950)]">Belum ada konten untuk ditampilkan</p>
-        <p className="mt-1 text-sm text-[var(--color-ink-500)]">
-          Akun ini belum memiliki postingan yang bisa ditarik dari platform.
-        </p>
+      <div className="rounded-xl border border-dashed border-white/[0.08] px-4 py-5 text-center">
+        <p className="text-xs text-white/30">Belum ada konten untuk ditampilkan</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-1.5">
       {contents.map((item) => {
         const thumbnailUrl = getProxyImageUrl(item.thumbnailUrl);
 
@@ -31,33 +28,27 @@ export function ContentList({ contents }: ContentListProps) {
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-3 rounded-2xl border border-slate-200/70 bg-white/72 p-3 transition hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white"
+            className="group flex items-center gap-2.5 rounded-xl border border-white/[0.06] bg-white/[0.03] p-2 transition hover:border-white/[0.12] hover:bg-white/[0.07]"
           >
-            <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-xl bg-slate-100">
+            <div className="relative h-10 w-16 shrink-0 overflow-hidden rounded-lg bg-white/5">
               {thumbnailUrl ? (
-                <Image
-                  src={thumbnailUrl}
-                  alt={item.title}
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
+                <Image src={thumbnailUrl} alt={item.title} fill className="object-cover" unoptimized />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-slate-100 text-xs font-medium text-slate-400">
-                  No image
+                <div className="flex h-full w-full items-center justify-center text-[10px] text-white/20">
+                  —
                 </div>
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="line-clamp-2 text-sm font-medium text-[var(--color-ink-950)] transition group-hover:text-[var(--color-brand)]">
+              <p className="line-clamp-1 text-xs font-medium text-white/60 transition group-hover:text-white/90">
                 {item.title}
               </p>
-              <div className="mt-1 flex items-center gap-2">
-                <span className="rounded-full bg-slate-100 px-2 py-1 text-[11px] font-medium text-[var(--color-ink-700)]">
+              <div className="mt-0.5 flex items-center gap-1.5">
+                <span className="text-[10px] font-semibold text-white/35">
                   {formatViewCount(item.viewCount)} views
                 </span>
-                <span className="text-slate-300">&bull;</span>
-                <span className="text-xs text-[var(--color-ink-500)]">{formatDate(item.publishedAt)}</span>
+                <span className="text-white/15">·</span>
+                <span className="text-[10px] text-white/25">{formatDate(item.publishedAt)}</span>
               </div>
             </div>
           </a>

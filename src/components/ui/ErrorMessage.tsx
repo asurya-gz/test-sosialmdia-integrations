@@ -6,9 +6,9 @@ interface ErrorMessageProps {
 
 export function ErrorMessage({ message }: ErrorMessageProps) {
   return (
-    <div className="rounded-2xl border border-red-200 bg-red-50/90 p-4 text-sm text-red-700">
-      <p className="font-semibold">Gagal memuat data</p>
-      <p className="mt-1 leading-6">{message}</p>
+    <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-3.5 text-xs">
+      <p className="font-bold text-red-400">Gagal memuat data</p>
+      <p className="mt-1 leading-5 text-red-400/70">{message}</p>
     </div>
   );
 }
